@@ -1,0 +1,75 @@
+body {
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  
+}
+
+td {
+  border: solid black;
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0.5rem 1rem 0px;
+  border: 3px solid red;
+}
+
+table {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+    
+}
+
+.container {
+  display: flex;
+  height: 92.5vh;
+  margin: 0;
+  padding: 0;
+}
+
+.container > div {
+  text-align: center;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+#lijeviDiv, #desniDiv {
+  min-width: 25vw;
+}
+
+tbody {
+  margin-top: 50px;
+  height: 100%;
+  min-width: 50vw;
+  
+}
+
+nav {
+  width: 100%;
+  position: sticky !important;
+  top: 0;
+}
+
+.navbar-collapse {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navbar-nav {
+  margin-right: 4%;
+}
+
+@media only screen and (max-width: 991px) {
+  .navbar-collapse {
+    justify-content: flex-start;
+  }
+
+  .navbar-nav {
+    margin-left: 4%;
+  }
+}
+
+.navbar-brand {
+  margin-left: 4%;
+}

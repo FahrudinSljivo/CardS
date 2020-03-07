@@ -1,0 +1,186 @@
+function nekoJePobijedio(lijeviIliDesni) {
+    if (confirm(lijeviIliDesni + " igrac je pobijedio! Zelite li ponovo igrati?")) {
+        if (koJePoceo === 0) {
+            koJePoceo++;
+            console.log("Desni igrac sada pocinje prvi!");
+            trenutniIgrac = koJePoceo;
+            bodoviLijevi = 0;
+            bodoviDesni = 0;
+            novaIgra();
+        }
+        else {
+            koJePoceo--;
+            console.log("Lijevi igrac sada pocinje prvi!");
+            trenutniIgrac = koJePoceo;
+            bodoviLijevi = 0;
+            bodoviDesni = 0;
+            novaIgra();
+        }
+    } else {
+        console.log("Nista onda");
+        location.href = "zavrsna.html";
+    }
+}
+
+
+function kliknutSmjeskoIliLjutko(sIliLj, koordinata1, koordinata2) {
+    do {
+        var k1 = Math.floor(Math.random() * 5); //generisanje slucajnog broja od 0 do 4
+        var k2 = Math.floor(Math.random() * 5);
+        if(!((k1 === koordinata1 && k2 === koordinata2) || (matrix[k1][k2] === "s") || (matrix[k1][k2] === "lj"))) {
+            matrix[k1][k2] = sIliLj;
+            break;
+        }
+    } while(true);
+}
+
+function generisiMatrice() {
+    for (var i = 0; i < 5; i++) {
+        matrix[i] = new Array(5);
+        matrixOfTimes[i] = new Array(5);
+    }
+
+    for (var i = 0; i < 5; i++) {
+        for (var j = 0; j < 5; j++) {
+            matrix[i][j] = Math.floor((Math.random() * 10) + 1); //(generisanje slucajnog broja od 1 do 10)
+            matrixOfTimes[i][j] = i + j + 2; //posto i i j idu od 0
+        }
+    }
+
+    var s = "s", lj = "lj";
+    var counterS = 0, counterLJ = 0;
+
+    while (counterS + counterLJ < 8) {
+        var k1 = Math.floor(Math.random() * 5); //generisanje slucajnog broja od 0 do 4
+        var k2 = Math.floor(Math.random() * 5);
+        if (matrix[k1][k2] != s && matrix[k1][k2] != lj) {
+            if (counterS < 4) {
+                matrix[k1][k2] = s;
+                counterS++;
+            }
+            else {
+                matrix[k1][k2] = lj;
+                counterLJ++;
+            }
+        }
+    }
+    console.log("Matrice su generisane");
+}
+
+var koJePoceo = 1;
+var trenutniIgrac = 0;
+var bodoviLijevi = 0, bodoviDesni = 0;
+
+var matrix = [];
+var matrixOfTimes = [];
+
+var urlParams = new URLSearchParams(window.location.search);
+
+function ispisujSaStrane() {
+
+    if (urlParams.get('prviIgr') === "" || urlParams.get('prviIgr') === null) document.getElementById("lijeviDiv").innerHTML = "Anonimus1 " + bodoviLijevi;
+    else document.getElementById("lijeviDiv").innerHTML = urlParams.get('prviIgr') + " " + bodoviLijevi;
+    if (urlParams.get('drugiIgr') === "" || urlParams.get('drugiIgr') === null) document.getElementById("desniDiv").innerHTML = "Anonimus2 " + bodoviDesni;
+    else document.getElementById("desniDiv").innerHTML = urlParams.get('drugiIgr') + " " + bodoviDesni;
+
+}
+
+function novaIgra() {
+
+
+    generisiMatrice();
+    ispisujSaStrane();
+    
+}
+
+
+novaIgra();
+
+
+
+$(".polje").on('click', function () {
+
+        
+        let a = $(this);
+        var koordinate = a.attr("class").split(" ")[1].split("");
+
+        $(this).html(matrix[koordinate[0]][koordinate[1]]);
+        
+        setTimeout(function(){
+            a.html("");
+        }, 1000);
+
+        
+
+        if (matrix[koordinate[0]][koordinate[1]] == "s") {
+            if (trenutniIgrac === 0) {
+                bodoviLijevi *= 2;               
+                //document.getElementById("lijeviDiv").innerHTML = urlParams.get('prviIgr') + " " + bodoviLijevi;
+                ispisujSaStrane();
+                kliknutSmjeskoIliLjutko("s");
+                matrix[koordinate[0]][koordinate[1]] = Math.floor((Math.random() * 10) + 1);
+                matrixOfTimes[koordinate[0]][koordinate[1]] = koordinate[0] + koordinate[1] + 2;
+                if(bodoviLijevi >= 50) {
+                    nekoJePobijedio("Lijevi");
+                }
+            }
+            else {
+                bodoviDesni *= 2;
+                //document.getElementById("desniDiv").innerHTML = urlParams.get('drugiIgr') + " " + bodoviDesni;
+                ispisujSaStrane();
+                kliknutSmjeskoIliLjutko("s");
+                matrix[koordinate[0]][koordinate[1]] = Math.floor((Math.random() * 10) + 1);
+                matrixOfTimes[koordinate[0]][koordinate[1]] = koordinate[0] + koordinate[1] + 2;
+                if(bodoviDesni >= 50) {
+                    nekoJePobijedio("Desni");
+                }
+            }
+        }
+        else if (matrix[koordinate[0]][koordinate[1]] == "lj") {
+            if (trenutniIgrac === 0) {
+                bodoviLijevi = 0;
+                //document.getElementById("lijeviDiv").innerHTML = urlParams.get('prviIgr') + " " + bodoviLijevi;
+                ispisujSaStrane();
+                console.log("Bodovi lijevog su: " + bodoviLijevi);
+                kliknutSmjeskoIliLjutko("lj", koordinate[0], koordinate[1]);
+                matrix[koordinate[0]][koordinate[1]] = Math.floor((Math.random() * 10) + 1);
+                matrixOfTimes[koordinate[0]][koordinate[1]] = koordinate[0] + koordinate[1] + 2;
+            }
+            else {
+                bodoviDesni = 0;
+                //document.getElementById("desniDiv").innerHTML = urlParams.get('drugiIgr') + " " + bodoviDesni;
+                ispisujSaStrane();
+                kliknutSmjeskoIliLjutko("lj", koordinate[0], koordinate[1]);
+                matrix[koordinate[0]][koordinate[1]] = Math.floor((Math.random() * 10) + 1);
+                matrixOfTimes[koordinate[0]][koordinate[1]] = koordinate[0] + koordinate[1] + 2;
+            }
+        } 
+        else {
+            if (trenutniIgrac === 0) {
+                bodoviLijevi += matrix[koordinate[0]][koordinate[1]];
+                //document.getElementById("lijeviDiv").innerHTML = urlParams.get('prviIgr') + " " + bodoviLijevi;
+                ispisujSaStrane();
+                matrixOfTimes[koordinate[0]][koordinate[1]]--;
+                if (matrixOfTimes[koordinate[0]][koordinate[1]] === 0) {
+                    matrix[koordinate[0]][koordinate[1]] = Math.floor((Math.random() * 10) + 1);
+                    matrixOfTimes[koordinate[0]][koordinate[1]] = parseInt(koordinate[0], 10) + parseInt(koordinate[1], 10) + 2;
+                }
+                if (bodoviLijevi >= 50) nekoJePobijedio("Lijevi");
+            }
+            else {
+                bodoviDesni += matrix[koordinate[0]][koordinate[1]];
+                //document.getElementById("desniDiv").innerHTML = urlParams.get('drugiIgr') + " " + bodoviDesni;
+                ispisujSaStrane();
+                matrixOfTimes[koordinate[0]][koordinate[1]]--;
+                if (matrixOfTimes[koordinate[0]][koordinate[1]] === 0) {
+                    matrix[koordinate[0]][koordinate[1]] = Math.floor((Math.random() * 10) + 1);
+                    matrixOfTimes[koordinate[0]][koordinate[1]] = parseInt(koordinate[0], 10) + parseInt(koordinate[1], 10) + 2;
+                }
+                if (bodoviDesni >= 50) nekoJePobijedio("Desni");
+            }
+        }
+
+        if (trenutniIgrac === 0) trenutniIgrac++;
+        else trenutniIgrac--;
+        
+})

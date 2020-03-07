@@ -1,0 +1,13 @@
+.div-style{
+    margin-top : 4rem;
+    padding : 3rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0.5rem 1rem 0px;
+}
+.body-background {
+    background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}
+.main-label{
+    margin: 1rem;
+}
